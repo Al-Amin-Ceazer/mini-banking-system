@@ -38,6 +38,8 @@ Generate a new application key
 Run the database migrations (**Set the database connection in .env before migrating**)
 
     php artisan migrate
+#### Run the tests
+    vendor\bin\phpunit
 
 Start the local development server
 
@@ -56,9 +58,6 @@ You can now access the server at http://localhost:8000
 **Make sure you set the correct database connection information before running the migrations** [Environment variables](#environment-variables)
 
     php artisan migrate
-## Run the tests
-    vendor\bin\phpunit
-## Then
     php artisan serve
 ## Database seeding
 
