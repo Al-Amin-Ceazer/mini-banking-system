@@ -97,7 +97,7 @@ class AuthController extends Controller
                     'submit_token' => $submitToken,
                 ];
 
-                return new ErrorResponse('customer', $message, Response::HTTP_INTERNAL_SERVER_ERROR);
+                return new ErrorResponse('register', $message, Response::HTTP_INTERNAL_SERVER_ERROR);
             }
 
             if ($newCustomer->wasRecentlyCreated) {
@@ -112,6 +112,6 @@ class AuthController extends Controller
             'submit_token' => $submitToken,
         ];
 
-        return new GenericResponse('logout', new Profile($newCustomer), $message,Response::HTTP_CREATED);
+        return new GenericResponse('register', new Profile($newCustomer), $message,Response::HTTP_CREATED);
     }
 }

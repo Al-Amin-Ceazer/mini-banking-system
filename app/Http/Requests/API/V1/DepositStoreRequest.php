@@ -3,6 +3,7 @@
 namespace App\Http\Requests\API\V1;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Http\Request;
 
 /**
  * Class LoginRequest
@@ -24,12 +25,16 @@ class DepositStoreRequest extends FormRequest
     /**
      * Get the validation rules that apply to the request.
      *
+     * @param Request $request
      * @return array
      */
-    public function rules()
+    public function rules(Request $request)
     {
+        $customer = $request->user();
+        $customerAccounts = $customer->accounts->pluck('id')->toArray();
+
         return [
-            'account_id'   => 'required|exists:accounts,id',
+            'account_id'   => 'required|in:'.implode(',', $customerAccounts),
             'amount'       => 'required|regex:/^\d+(\.\d{1,2})?$/',
             'submit_token' => 'required',
         ];

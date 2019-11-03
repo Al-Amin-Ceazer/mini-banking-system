@@ -18,7 +18,7 @@ class Deposit extends Resource
         return [
             'account_id'  => $this->account_id,
             'amount'      => $this->amount,
-            'date'        => $this->date_time,
+            'date'        => $this->date_time->toDateTimeString(),
             'description' => $this->description,
         ];
     }
