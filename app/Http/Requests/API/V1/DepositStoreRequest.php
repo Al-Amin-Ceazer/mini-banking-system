@@ -9,7 +9,7 @@ use Illuminate\Foundation\Http\FormRequest;
  *
  * @package App\Http\Requests\API\V1
  */
-class AttendanceStoreRequest extends FormRequest
+class DepositStoreRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -29,10 +29,9 @@ class AttendanceStoreRequest extends FormRequest
     public function rules()
     {
         return [
-            'start' => 'required|string',
-            'end'   => 'required|string',
-            'break' => 'required|string',
-            'date'  => 'required|date',
+            'account_id'   => 'required|exists:accounts,id',
+            'amount'       => 'required|string',
+            'submit_token' => 'required',
         ];
     }
 }

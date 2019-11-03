@@ -15,7 +15,7 @@ class CreateBankingTransactionsTable extends Migration
     {
         Schema::create('banking_transactions', function (Blueprint $table) {
             $table->increments('id');
-            $table->unsignedInteger('customer_id');
+            $table->unsignedInteger('account_id');
             $table->enum('transaction_type', ['debit', 'credit']);
             $table->string('description');
             $table->decimal('amount',10,2);
@@ -23,7 +23,7 @@ class CreateBankingTransactionsTable extends Migration
             $table->softDeletes();
             $table->timestamps();
 
-            $table->foreign('customer_id')->references('id')->on('customers');
+            $table->foreign('account_id')->references('id')->on('accounts');
         });
     }
 

@@ -2,9 +2,16 @@
 
 namespace App\Repositories;
 
+use App\Models\Account;
+use App\Models\AccountType;
+use App\Models\Branch;
 use App\Models\Customer;
 use App\Models\CustomerToken;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
+use Symfony\Component\HttpFoundation\Tests\AcceptHeaderTest;
 
 class CustomerRepository
 {
@@ -50,26 +57,47 @@ class CustomerRepository
 
     public function store($data)
     {
+        $branch = Branch::where('branch_name','default')->first();
+        $accountType = AccountType::where('type','savings')->first();
         $customer = new Customer();
 
         $customer->first_name    = $data['first_name'];
         $customer->last_name     = $data['last_name'];
         $customer->email         = $data['email'];
-        $customer->personal_code = $data['username'];
         $customer->password      = Hash::make($data['password']);
 
-        if (!$customer->save()) {
-            return false;
+        $account = new Account();
+        $account->branch_id = $branch->id;
+        $account->account_type_id = $accountType->id;
+        $account->account_balance = $accountType->minimum_balance_restriction;
+        $account->date_opened = Carbon::today();
+        $account->currency = 'Euro';
+
+        try {
+            DB::beginTransaction();
+            $customer->save();
+            $account->save();
+            $customer->accounts()->attach($account->id);
+
+            $customer->personal_code = $this->generatePersonalCode($customer->id,$branch->id);
+            $customer->save();
+
+            DB::commit();
+
+            return $customer;
+        } catch (\Exception $exception) {
+            DB::rollBack();
+            Log::error($exception);
         }
 
-        return $customer;
+        return false;
     }
 
-    protected function generatePersonalCode($customer_id)
+    protected function generatePersonalCode($customerId,$branchId)
     {
         $dateString = date('Ymd'); //Generate a datestring.
-        $branchNumber = 101; //Get the branch number somehow.
-        $receiptNumber = $customer_id;
+        $branchNumber = 100+$branchId;
+        $receiptNumber = $customerId;
 
         if($receiptNumber < 9999) {
 

@@ -6,6 +6,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class Account extends Model
 {
+    protected $fillable = [
+        'account_balance',
+    ];
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */

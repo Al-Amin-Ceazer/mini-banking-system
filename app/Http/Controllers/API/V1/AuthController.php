@@ -25,6 +25,12 @@ class AuthController extends Controller
     protected $customers;
     protected $tokens;
 
+    /**
+     * AuthController constructor.
+     *
+     * @param \App\Repositories\CustomerRepository    $customers
+     * @param \App\Repositories\SubmitTokenRepository $tokens
+     */
     public function __construct(CustomerRepository $customers, SubmitTokenRepository $tokens)
     {
         $this->customers = $customers;
@@ -85,13 +91,13 @@ class AuthController extends Controller
             if ($newCustomer === false) {
 
                 $message = [
-                    'code'         => 500,
+                    'code'         => Response::HTTP_INTERNAL_SERVER_ERROR,
                     'app_message'  => 'customer store failed',
                     'user_message' => 'Customer could not be stored!',
                     'submit_token' => $submitToken,
                 ];
 
-                return new ErrorResponse('customer', $message, 500);
+                return new ErrorResponse('customer', $message, Response::HTTP_INTERNAL_SERVER_ERROR);
             }
 
             if ($newCustomer->wasRecentlyCreated) {
@@ -100,12 +106,12 @@ class AuthController extends Controller
         }
 
         $message = [
-            'code'         => 200,
+            'code'         => Response::HTTP_CREATED,
             'app_message'  => 'customer store successful',
             'user_message' => 'Customer registered successfully!',
             'submit_token' => $submitToken,
         ];
 
-        return new GenericResponse('logout', new Profile($newCustomer), $message);
+        return new GenericResponse('logout', new Profile($newCustomer), $message,Response::HTTP_CREATED);
     }
 }

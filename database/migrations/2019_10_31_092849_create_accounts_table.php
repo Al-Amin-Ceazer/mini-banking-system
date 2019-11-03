@@ -19,6 +19,7 @@ class CreateAccountsTable extends Migration
             $table->unsignedInteger('account_type_id');
             $table->decimal('account_balance', 10, 2);
             $table->date('date_opened');
+            $table->string('currency',10);
             $table->softDeletes();
             $table->timestamps();
 
