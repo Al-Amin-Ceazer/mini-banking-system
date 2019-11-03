@@ -9,7 +9,7 @@ use Illuminate\Foundation\Http\FormRequest;
  *
  * @package App\Http\Requests\API\V1
  */
-class DepositStoreRequest extends FormRequest
+class FundTransferStoreRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -29,9 +29,10 @@ class DepositStoreRequest extends FormRequest
     public function rules()
     {
         return [
-            'account_id'   => 'required|exists:accounts,id',
-            'amount'       => 'required|regex:/^\d+(\.\d{1,2})?$/',
-            'submit_token' => 'required',
+            'from_account_id' => 'required|exists:accounts,id',
+            'beneficiary_id'  => 'required|exists:beneficiaries,id',
+            'amount'          => 'required|regex:/^\d+(\.\d{1,2})?$/',
+            'submit_token'    => 'required',
         ];
     }
 }
