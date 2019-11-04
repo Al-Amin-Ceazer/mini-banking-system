@@ -51,7 +51,6 @@ class TransactionRepository
         $transaction->date_time        = Carbon::now();
 
         $account = Account::find($data['from_account_id']);
-        //dd($account);
 
         $beneficiary = Beneficiary::find($data['beneficiary_id']);
 

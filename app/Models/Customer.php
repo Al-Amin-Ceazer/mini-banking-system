@@ -40,4 +40,9 @@ class Customer extends Model
     {
         return $this->belongsToMany(Account::class);
     }
+
+    public function beneficiaries()
+    {
+        return $this->hasMany(Beneficiary::class);
+    }
 }

@@ -3,6 +3,7 @@
 namespace App\Http\Requests\API\V1;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Http\Request;
 
 /**
  * Class LoginRequest
@@ -24,13 +25,18 @@ class FundTransferStoreRequest extends FormRequest
     /**
      * Get the validation rules that apply to the request.
      *
+     * @param \Illuminate\Http\Request $request
+     *
      * @return array
      */
-    public function rules()
+    public function rules(Request $request)
     {
+        $customer = $request->user();
+        $customerAccounts = $customer->accounts->pluck('id')->toArray();
+        $customerBeneficiaries = $customer->beneficiaries->pluck('id')->toArray();
         return [
-            'from_account_id' => 'required|exists:accounts,id',
-            'beneficiary_id'  => 'required|exists:beneficiaries,id',
+            'from_account_id' => 'required|in:'.implode(',', $customerAccounts),
+            'beneficiary_id'  => 'required|in:'.implode(',', $customerBeneficiaries),
             'amount'          => 'required|regex:/^\d+(\.\d{1,2})?$/',
             'submit_token'    => 'required',
         ];
